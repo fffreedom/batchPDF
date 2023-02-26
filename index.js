@@ -5,10 +5,13 @@
  * @updateDate 2018/04/28
  */
 
-const PDFParser = require('pdf2json');
-const fs = require('fs');
+import PDFParser from 'pdf2json';
+// const PDFParser = require('pdf2json');
+import fs from 'fs'
+// const fs = require('fs');
 const src = './pdf';
-const xlsx = require('node-xlsx');
+import xlsx from 'node-xlsx'
+// const xlsx = require('node-xlsx');
 
 class handleFile {
     constructor(){
@@ -26,8 +29,14 @@ class handleFile {
             pdfParser.on('pdfParser_dataError', errData =>reject( new Error(errData.parserError)));
             pdfParser.on('pdfParser_dataReady', () => {
                 let data = pdfParser.getRawTextContent();
-                let result = data.match(/(统一社会信用代码|单位名称|行业类别)：[\S]*/g);
+                let result = data.match(/(股票代碼|单位名称|行业类别)：[\S]*/g);
+                if (result == null) {
+                    return;
+                }
                 for (let i = 0 ;i < 3;++i){
+                    if (result[i] == undefined) {
+                        break;
+                    }
                     result[i] = result[i].split('：')[1];
                 }
                 resolve(result);
